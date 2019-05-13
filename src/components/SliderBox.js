@@ -15,6 +15,8 @@ const BoxWrapper = styled.div`
   transition: transform 0.4s;
   transform: ${prop => prop.transform};
   z-index: 100;
+  top: 50%;
+  margin-top: -197px;
 
   display: flex;
   flex-direction: column;

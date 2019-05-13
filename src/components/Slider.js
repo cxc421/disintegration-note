@@ -18,6 +18,7 @@ import sImg5_s from '../assets/slider_5_small.jpg';
 const Wrapper = styled.div`
   flex-grow: 1;
   /* background: rgba(255, 0, 0, 0.1); */
+  /* height: 100%; */
   width: 100%;
   margin-top: 40px;
   margin-bottom: 80px;
