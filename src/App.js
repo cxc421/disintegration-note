@@ -1,25 +1,36 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import Layout from './components/Layout';
+import TextInput from './components/TextInput';
+import Slider from './components/Slider';
 
 function App() {
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [names, setNames] = useState('');
+
+  const onTextInputSubmit = () => {
+    setIsProcessing(true);
+  };
+
+  const onProcessComplete = () => {
+    console.log('on-process-complete');
+    setNames('');
+    setIsProcessing(false);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Layout>
+      <Slider
+        isProcessing={isProcessing}
+        names={names}
+        onProcessComplete={onProcessComplete}
+      />
+      <TextInput
+        names={names}
+        setNames={setNames}
+        isProcessing={isProcessing}
+        onSubmit={onTextInputSubmit}
+      />
+    </Layout>
   );
 }
 
