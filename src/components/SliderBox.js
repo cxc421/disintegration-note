@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import styled, { css as _css, keyframes } from 'styled-components';
+import React, { useState, memo } from 'react';
+import styled, { css as _css } from 'styled-components';
 import { NavigateBefore } from 'styled-icons/material/NavigateBefore';
 import { NavigateNext } from 'styled-icons/material/NavigateNext';
 import { useLazyImage } from '../util-hooks';
+import DisImg from './DisImg';
 
 const BoxWrapper = styled.div`
   position: absolute;
@@ -64,19 +65,6 @@ const RightArrowIcon = styled(NavigateNext)`
   }
 `;
 
-const fadeAnimate = keyframes`
-  from {
-    opacity: 1
-  }
-  to {
-    opacity: 0
-  }
-`;
-
-const imgAnimateCss = _css`
-  animation: ${fadeAnimate} 3s ease-in 1s 1 both;
-`;
-
 const ImgArea = styled.div`
   position: absolute;
   transition: all 0.4s;
@@ -100,24 +88,15 @@ const ImgArea = styled.div`
   }}
 `;
 
-const ImgOrigin = styled.div`
-  width: 100%;
-  height: 100%;
-  background-size: cover;
-  background-position: center center;
-  background-image: url(${prop => prop.imgSrc});
-
-  ${prop => {
-    if (prop.isDelete) {
-      return imgAnimateCss;
-    }
-  }}
-`;
-
 const BlackDiv = styled.div`
+  position: absolute;
   width: 100%;
   height: 100%;
   background: black;
+  opacity: 0;
+  top: 0;
+  left: 0;
+  transition: opacity 1s;
 `;
 
 const SliderBox = ({
@@ -133,6 +112,13 @@ const SliderBox = ({
 }) => {
   const [alreadyDelete, setAlreadyDelete] = useState(false);
   const imgSrc = useLazyImage({ imgSmall: img_s, imgBig: img });
+  const blackDivStyle = {
+    opacity: alreadyDelete ? 1 : 0
+  };
+  const nameStyle = {
+    color: alreadyDelete ? 'red' : 'black',
+    textDecoration: alreadyDelete ? 'line-through' : 'none'
+  };
 
   function onAnimationEnd() {
     setAlreadyDelete(true);
@@ -142,21 +128,18 @@ const SliderBox = ({
   return (
     <BoxWrapper transform={transform}>
       <ImgArea showOuter={showOuter}>
-        {alreadyDelete ? (
-          <BlackDiv />
-        ) : (
-          <ImgOrigin
-            imgSrc={imgSrc}
-            isDelete={isDelete}
-            onAnimationEnd={onAnimationEnd}
-          />
-        )}
+        <DisImg
+          imgSrc={imgSrc}
+          isDelete={isDelete}
+          onAnimationEnd={onAnimationEnd}
+        />
+        <BlackDiv style={blackDivStyle} />
       </ImgArea>
-      <Name>{text}</Name>
+      <Name style={nameStyle}>{text}</Name>
       <LeftArrowIcon showOuter={showOuter} onClick={onClickPrevIcon} />
       <RightArrowIcon showOuter={showOuter} onClick={onClickNextIcon} />
     </BoxWrapper>
   );
 };
 
-export default SliderBox;
+export default memo(SliderBox);

@@ -39,15 +39,33 @@ const Input = styled.input`
   background: transparent;
   width: 100%;
   padding: 0;
-  color: ${prop => (prop.isProcessing ? 'red' : 'black')};
+  /* color: ${prop => (prop.isProcessing ? 'red' : 'black')}; */
   pointer-events: ${prop => (prop.isProcessing ? 'none' : 'auto')};
 `;
 
-const TextInput = ({ names, setNames, onSubmit, isProcessing }) => {
+const TextInput = ({
+  names,
+  setNames,
+  onSubmit,
+  isProcessing,
+  haveError,
+  clearError
+}) => {
   const inputRef = useRef();
+  const className = haveError ? 'animated shake' : 'none';
 
   function onKeyDown(e) {
     e.nativeEvent.stopImmediatePropagation();
+  }
+
+  function onAnimationEnd() {
+    clearError();
+    if (inputRef.current) {
+      setTimeout(function() {
+        inputRef.current.focus();
+        inputRef.current.selectionStart = inputRef.current.selectionEnd = 10000;
+      }, 0);
+    }
   }
 
   function onTextInputSubmit(e) {
@@ -59,13 +77,18 @@ const TextInput = ({ names, setNames, onSubmit, isProcessing }) => {
   }
 
   return (
-    <Wrapper onSubmit={onTextInputSubmit}>
+    <Wrapper
+      onSubmit={onTextInputSubmit}
+      className={className}
+      onAnimationEnd={onAnimationEnd}
+    >
       <Title>— Write Down the Name to Disintegrate it —</Title>
       <InputWrapper>
         <Input
           type="text"
           ref={inputRef}
           value={names}
+          autoFocus={false}
           isProcessing={isProcessing}
           onKeyDown={onKeyDown}
           onChange={e => {

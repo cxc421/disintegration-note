@@ -55,9 +55,11 @@ const slider = [
   }
 ];
 
-function useLeftRightKeyboard(showIdx, changeBox) {
+function useLeftRightKeyboard(showIdx, changeBox, isProcessing) {
   useEffect(() => {
     function onKeyDown(e) {
+      if (isProcessing) return;
+
       if (e.keyCode === 39) {
         changeBox(showIdx + 1);
       } else if (e.keyCode === 37) {
@@ -68,42 +70,51 @@ function useLeftRightKeyboard(showIdx, changeBox) {
     return () => {
       document.removeEventListener('keydown', onKeyDown);
     };
-  }, [showIdx, changeBox]);
+  }, [showIdx, changeBox, isProcessing]);
 }
 
 const defaultDeleteArr = slider.map(() => false);
 
-function Slider({ names, isProcessing, onProcessComplete }) {
+function Slider({ names, isProcessing, onProcessComplete, onProcessError }) {
   const [showIdx, setShowIdx] = useState(0);
   const [nameArr, setNameArr] = useState([]);
   const [nameIdx, setNameIdx] = useState(-1);
   const [deleteArr, setDeleteArr] = useState(defaultDeleteArr);
   const prevNameIdx = usePrevious(nameIdx);
 
-  useLeftRightKeyboard(showIdx, changeBox);
+  useLeftRightKeyboard(showIdx, changeBox, isProcessing);
 
   useEffect(() => {
     if (isProcessing) {
-      console.log('Effect - A');
+      // console.log('Effect - A');
       const nameArr = names.split(' ').filter(name => name.length > 0);
       if (nameArr.length > 0) {
+        let haveError = nameArr.find(
+          name => -1 === slider.findIndex(obj => obj.text === name)
+        );
+        if (haveError) {
+          setNameIdx(-1);
+          onProcessError();
+          return;
+        }
+
         setNameArr(nameArr);
         setNameIdx(0);
         console.log({ nameArr });
       } else {
-        console.log('complete');
+        // console.log('complete');
         setNameIdx(-1);
-        onProcessComplete();
+        onProcessError();
       }
     }
-  }, [isProcessing, names, onProcessComplete]);
+  }, [isProcessing, names, onProcessComplete, onProcessError]);
 
   useEffect(() => {
     if (isProcessing && nameIdx >= 0 && nameIdx !== prevNameIdx) {
-      console.log('Effect - B');
+      // console.log('Effect - B');
       const name = nameArr[nameIdx];
       if (!name) {
-        console.log('complete');
+        // console.log('complete');
         setNameIdx(-1);
         onProcessComplete();
       }
@@ -112,10 +123,10 @@ function Slider({ names, isProcessing, onProcessComplete }) {
         (box, idx) => box.text === name && !deleteArr[idx]
       );
       if (boxIdx === -1) {
-        console.log('not found: ' + name);
+        // console.log('not found: ' + name);
         setNameIdx(nameIdx + 1);
       } else {
-        console.log('found: ' + name);
+        // console.log('found: ' + name);
         const newDeleteArr = deleteArr.slice();
         newDeleteArr[boxIdx] = true;
         setDeleteArr(newDeleteArr);
@@ -141,7 +152,7 @@ function Slider({ names, isProcessing, onProcessComplete }) {
   }
 
   function onDeleteComplete(idx) {
-    console.log('Delete complete - ' + idx);
+    // console.log('Delete complete - ' + idx);
     setNameIdx(nameIdx + 1);
   }
 
@@ -188,4 +199,4 @@ function Slider({ names, isProcessing, onProcessComplete }) {
   );
 }
 
-export default Slider;
+export default React.memo(Slider);
