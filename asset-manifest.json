@@ -1,0 +1,28 @@
+{
+  "files": {
+    "main.css": "/disintegration-note/static/css/main.63885582.chunk.css",
+    "main.js": "/disintegration-note/static/js/main.4456870b.chunk.js",
+    "main.js.map": "/disintegration-note/static/js/main.4456870b.chunk.js.map",
+    "runtime~main.js": "/disintegration-note/static/js/runtime~main.acc720a7.js",
+    "runtime~main.js.map": "/disintegration-note/static/js/runtime~main.acc720a7.js.map",
+    "static/css/2.49d5e55d.chunk.css": "/disintegration-note/static/css/2.49d5e55d.chunk.css",
+    "static/js/2.a5a44511.chunk.js": "/disintegration-note/static/js/2.a5a44511.chunk.js",
+    "static/js/2.a5a44511.chunk.js.map": "/disintegration-note/static/js/2.a5a44511.chunk.js.map",
+    "index.html": "/disintegration-note/index.html",
+    "precache-manifest.d37d0d0198958b6e7d2491a80c89f94e.js": "/disintegration-note/precache-manifest.d37d0d0198958b6e7d2491a80c89f94e.js",
+    "service-worker.js": "/disintegration-note/service-worker.js",
+    "static/css/2.49d5e55d.chunk.css.map": "/disintegration-note/static/css/2.49d5e55d.chunk.css.map",
+    "static/css/main.63885582.chunk.css.map": "/disintegration-note/static/css/main.63885582.chunk.css.map",
+    "static/media/bg.jpg": "/disintegration-note/static/media/bg.2454d1df.jpg",
+    "static/media/bg_small.jpg": "/disintegration-note/static/media/bg_small.21d5d0fe.jpg",
+    "static/media/slider_1.jpg": "/disintegration-note/static/media/slider_1.10371cce.jpg",
+    "static/media/slider_1_small.jpg": "/disintegration-note/static/media/slider_1_small.74f0325c.jpg",
+    "static/media/slider_2.jpg": "/disintegration-note/static/media/slider_2.c5e31cb1.jpg",
+    "static/media/slider_2_small.jpg": "/disintegration-note/static/media/slider_2_small.91a1e504.jpg",
+    "static/media/slider_3.jpg": "/disintegration-note/static/media/slider_3.14da377e.jpg",
+    "static/media/slider_3_small.jpg": "/disintegration-note/static/media/slider_3_small.92a93e33.jpg",
+    "static/media/slider_4.jpg": "/disintegration-note/static/media/slider_4.179e21b8.jpg",
+    "static/media/slider_5.jpg": "/disintegration-note/static/media/slider_5.25252b47.jpg",
+    "static/media/slider_5_small.jpg": "/disintegration-note/static/media/slider_5_small.e6ffd677.jpg"
+  }
+}
