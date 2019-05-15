@@ -128,11 +128,13 @@ const SliderBox = ({
   return (
     <BoxWrapper transform={transform}>
       <ImgArea showOuter={showOuter}>
-        <DisImg
-          imgSrc={imgSrc}
-          isDelete={isDelete}
-          onAnimationEnd={onAnimationEnd}
-        />
+        {!alreadyDelete && (
+          <DisImg
+            imgSrc={imgSrc}
+            isDelete={isDelete}
+            onAnimationEnd={onAnimationEnd}
+          />
+        )}
         <BlackDiv style={blackDivStyle} />
       </ImgArea>
       <Name style={nameStyle}>{text}</Name>

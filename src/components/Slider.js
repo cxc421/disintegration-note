@@ -73,6 +73,25 @@ function useLeftRightKeyboard(showIdx, changeBox, isProcessing) {
   }, [showIdx, changeBox, isProcessing]);
 }
 
+// function useResize(ref) {
+//   useEffect(() => {
+//     function resize() {
+//       console.log('resize');
+//       if (ref.current) {
+//         const viewHeight = ref.current.clientHeight;
+//         const defautlHeight = 393;
+//         const scale = viewHeight / defautlHeight;
+//         ref.current.style.transform = `scale(${scale})`;
+//       }
+//     }
+//     window.addEventListener('resize', resize);
+//     resize();
+//     return () => {
+//       window.removeEventListener('resize', resize);
+//     };
+//   }, [ref]);
+// }
+
 const defaultDeleteArr = slider.map(() => false);
 
 function Slider({ names, isProcessing, onProcessComplete, onProcessError }) {
@@ -90,7 +109,11 @@ function Slider({ names, isProcessing, onProcessComplete, onProcessError }) {
       const nameArr = names.split(' ').filter(name => name.length > 0);
       if (nameArr.length > 0) {
         let haveError = nameArr.find(
-          name => -1 === slider.findIndex(obj => obj.text === name)
+          name =>
+            -1 ===
+            slider.findIndex(
+              obj => obj.text.toLowerCase() === name.toLowerCase()
+            )
         );
         if (haveError) {
           setNameIdx(-1);
@@ -117,10 +140,12 @@ function Slider({ names, isProcessing, onProcessComplete, onProcessError }) {
         // console.log('complete');
         setNameIdx(-1);
         onProcessComplete();
+        return;
       }
 
       const boxIdx = slider.findIndex(
-        (box, idx) => box.text === name && !deleteArr[idx]
+        (box, idx) =>
+          box.text.toLowerCase() === name.toLowerCase() && !deleteArr[idx]
       );
       if (boxIdx === -1) {
         // console.log('not found: ' + name);

@@ -73,7 +73,7 @@ function drawImageProp(ctx, img, x, y, w, h, offsetX, offsetY) {
 }
 
 class DisImg extends PureComponent {
-  canvasCount = 35;
+  canvasCount = 70;
   wrapperRef = createRef();
 
   createBlankImageData(imageData) {
@@ -88,15 +88,34 @@ class DisImg extends PureComponent {
     return imageDataArray;
   }
 
-  weightedRandomDistrib(peak) {
-    var prob = [],
-      seq = [];
-    for (let i = 0; i < this.canvasCount; i++) {
-      prob.push(Math.pow(this.canvasCount - Math.abs(peak - i), 3));
-      seq.push(i);
-    }
-    return chance.weighted(seq, prob);
-  }
+  weightedRandomDistrib = (() => {
+    const _cache = {};
+
+    const _getArr = (peak, cCount) => {
+      if (!_cache[peak]) {
+        const prob = [];
+        const seq = [];
+        const range = cCount / 2;
+        for (let i = 0; i < cCount; i++) {
+          const diff = Math.abs(peak - i);
+          if (diff > range) {
+            prob.push(0);
+          } else {
+            prob.push(Math.pow(range - diff, 3));
+          }
+          // prob.push(Math.pow(cCount - Math.abs(peak - i), 6));
+          seq.push(i);
+        }
+        _cache[peak] = { prob, seq };
+      }
+      return _cache[peak];
+    };
+
+    return peak => {
+      const { prob, seq } = _getArr(peak, this.canvasCount);
+      return chance.weighted(seq, prob);
+    };
+  })();
 
   newCanvasFromImageData(imageDataArray, w, h) {
     var canvas = document.createElement('canvas');
@@ -124,19 +143,19 @@ class DisImg extends PureComponent {
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     const pixelArr = imageData.data;
     const imageDataArray = this.createBlankImageData(imageData);
-
-    // console.log(imageDataArray[0]);
-    // console.log(pixelArr);
     //put pixel info to imageDataArray (Weighted Distributed)
-    for (let i = 0; i < pixelArr.length; i += 4) {
-      //find the highest probability canvas the pixel should be in
-      let p = Math.floor((i / pixelArr.length) * this.canvasCount);
-      for (let k = 0; k < 1; k++) {
-        let a = imageDataArray[this.weightedRandomDistrib(p)];
-        a[i] = pixelArr[i];
-        a[i + 1] = pixelArr[i + 1];
-        a[i + 2] = pixelArr[i + 2];
-        a[i + 3] = pixelArr[i + 3];
+    for (let w = 0; w < canvas.width; w++) {
+      for (let h = 0; h < canvas.height; h++) {
+        const dataIndex = Math.floor(h / (canvas.height / this.canvasCount));
+
+        for (let count = 0; count < 2; count++) {
+          const canvasData =
+            imageDataArray[this.weightedRandomDistrib(dataIndex)];
+          const pixelIndex = (h * canvas.width + w) * 4;
+          for (let offset = 0; offset < 4; offset++) {
+            canvasData[pixelIndex + offset] = pixelArr[pixelIndex + offset];
+          }
+        }
       }
     }
 
@@ -153,33 +172,38 @@ class DisImg extends PureComponent {
       canvasList.push(c);
     }
     const topImg = container.querySelector('div');
-    const topImgDuration = 3500 / 2;
+    // const topImgDuration = (70 * this.canvasCount) / 2;
+    const topImgDuration = 500;
     topImg.style.webkitAnimation = `fadeOut ${topImgDuration}ms ease 0s 1 both`;
     topImg.addEventListener('animationend', function() {
-      container.removeChild(this);
+      // container.removeChild(this);
     });
 
+    const easeInQuint = 'cubic-bezier(0.755, 0.05, 0.855, 0.06)';
+    // const easeInQuart = 'cubic-bezier(0.895, 0.03, 0.685, 0.22)';
+    const easeInCubic = 'cubic-bezier(0.55, 0.055, 0.675, 0.19)';
+
     canvasList.forEach((c, index) => {
-      c.classList.add('blurDis');
+      // c.classList.add('blurDis');
       setTimeout(() => {
         const sx = 0;
-        const sy = -150;
+        const sy = -100;
         const angle = 0;
-        const duration = 35 + 35 * index;
+        const duration = 70 + 0 * index;
 
-        c.style.WebkitTransition = `transform ${duration}ms cubic-bezier(0.755, 0.05, 0.855, 0.06)`;
+        c.style.WebkitTransition = `transform ${duration}ms ${easeInQuint}`;
         c.style.transform = `rotate(${angle}deg) translate(${sx}px, ${sy}px)`;
 
-        c.style.webkitAnimation = `fadeOut ${duration}ms cubic-bezier(0.755, 0.05, 0.855, 0.06) 0s 1 both`;
-      }, 35 * index);
+        c.style.webkitAnimation = `fadeOut ${duration}ms ${easeInCubic} 0s 1 both`;
+      }, 70 * index);
 
       c.addEventListener('animationend', e => {
         if (e.animationName === 'fadeOut') {
-          container.removeChild(c);
+          // container.removeChild(c);
           if (index === canvasList.length - 1) {
             setTimeout(() => {
               this.props.onAnimationEnd();
-            }, 100);
+            }, 200);
           }
         }
       });
