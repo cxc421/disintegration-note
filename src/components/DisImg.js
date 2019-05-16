@@ -73,7 +73,7 @@ function drawImageProp(ctx, img, x, y, w, h, offsetX, offsetY) {
 }
 
 class DisImg extends PureComponent {
-  canvasCount = 70;
+  canvasCount = 35;
   wrapperRef = createRef();
 
   createBlankImageData(imageData) {
@@ -101,7 +101,7 @@ class DisImg extends PureComponent {
           if (diff > range) {
             prob.push(0);
           } else {
-            prob.push(Math.pow(range - diff, 3));
+            prob.push(Math.pow(range - diff, 2));
           }
           // prob.push(Math.pow(cCount - Math.abs(peak - i), 6));
           seq.push(i);
@@ -189,7 +189,7 @@ class DisImg extends PureComponent {
         const sx = 0;
         const sy = -100;
         const angle = 0;
-        const duration = 70 + 0 * index;
+        const duration = 80 + 30 * index;
 
         c.style.WebkitTransition = `transform ${duration}ms ${easeInQuint}`;
         c.style.transform = `rotate(${angle}deg) translate(${sx}px, ${sy}px)`;
